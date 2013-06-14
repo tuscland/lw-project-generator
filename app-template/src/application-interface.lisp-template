@@ -1,0 +1,31 @@
+(in-package #{app-package-name})
+
+(capi:define-interface application-interface (capi:cocoa-default-application-interface)
+  ((main-interface
+    :initform nil
+    :accessor application-interface-main-interface))
+  (:default-initargs
+   :title #{app-name}
+   :destroy-callback 'application-interface-destroy)
+  (:extra-initargs
+   '(:main-interface-class)))
+
+(defmethod initialize-instance :after ((self application-interface) &key main-interface-class)
+  ;; Set the application interface before using any other CAPI
+  ;; functionality.
+  (capi:set-application-interface self)
+  ;; Start the application with its single window.
+  (let ((main-interface (make-instance main-interface-class
+                                       :application-interface self)))
+    (setf (application-interface-main-interface self) main-interface)
+    (capi:display main-interface)))
+
+(defun application-interface-destroy (application)
+  (when-let (main-interface (application-interface-main-interface application))
+    ;; Set application-interface to nil to prevent recursion back from
+    ;; main-interface's destroy-callback.
+    (setf (slot-value main-interface 'application-interface) nil)
+    ;; Destroy the single drawing window.  When run as a delivered
+    ;; application, this will cause the application to exit because it
+    ;; has no more windows.
+    (capi:destroy main-interface)))

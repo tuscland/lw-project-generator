@@ -1,0 +1,13 @@
+(in-package "CL-USER")
+
+(defsystem #{system-name}
+  (:default-pathname "src")
+  :members ("package"
+            "application-interface"
+            "main")
+  :rules ((:in-order-to :compile :all
+           (:requires
+            (:load "package")))
+          (:in-order-to :compile "main"
+           (:requires
+            (:load "application-interface")))))

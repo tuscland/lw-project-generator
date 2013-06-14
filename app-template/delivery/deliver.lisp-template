@@ -1,0 +1,59 @@
+(in-package "CL-USER")
+
+(load (current-pathname "load"))
+
+(defparameter *build-date*
+  (multiple-value-bind (seconds minutes hours day month year &rest)
+      (decode-universal-time (get-universal-time))
+    (format nil "~A-~2,'0D-~2,'0D"
+            year month day)))
+
+(defun has-feature (feature)
+  (member *features* feature))
+
+(defun architecture ()
+  (cond
+   ((has-feature :LISPWORKS-32BIT) "i386")
+   ((has-feature :LISPWORKS-64BIT) "x86-64")
+   (t "unknown")))
+
+(defparameter *version*
+  #{app-version})
+
+(defparameter *version-string*
+  (format nil "~A (~A)" *version* *build-date*))
+
+(defparameter *application-name*
+  #{app-name})
+
+(defparameter *architecture-name*
+  (format nil "~A-~A" (software-type) (architecture)))
+
+(defvar *target-application-path*
+  (current-pathname (format nil "../build/~A/~A"
+                            *architecture-name* *application-name*)
+                    "app"))
+
+(defvar *target-executable-path*
+  *target-application-path*)
+
+(when (has-feature :MACOSX) ; can't use sharpsign because these
+                            ; forms are read for processing.
+  (when (save-argument-real-p)
+    (let ((template-bundle-path
+           (pathname-location
+            (current-pathname "delivery-templates/AppTemplate.app/"))))
+      (setf *target-executable-path*
+            (hcl:create-macos-application-bundle
+             *target-executable-path*
+             :template-bundle template-bundle-path
+             :document-types nil
+             :identifier #{osx-bundle-identifier}
+             :version #{app-version}
+             :version-string *version-string*)))))
+
+(lw:deliver '#{main-function-symbol}
+     	    *target-executable-path*
+            0
+            :split :resources
+            :interface :capi)

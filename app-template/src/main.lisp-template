@@ -1,0 +1,13 @@
+(in-package #{app-package-name})
+
+(capi:define-interface #{main-interface-class-symbol} ()
+  ((application-interface
+    :initarg :application-interface))
+  (:default-initargs
+   :best-width 600
+   :best-height 400
+   :title #{app-name}))
+
+(defun #{main-function-symbol} ()
+  (make-instance 'application-interface
+                 :main-interface-class '#{main-interface-class-symbol}))

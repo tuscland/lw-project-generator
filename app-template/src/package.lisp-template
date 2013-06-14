@@ -1,0 +1,5 @@
+(in-package "CL-USER")
+
+(defpackage #{app-package-name}
+  (:export
+   #{main-function-name}))
