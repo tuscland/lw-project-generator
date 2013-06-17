@@ -1,0 +1,13 @@
+(in-package "CL-USER")
+
+(defparameter *product-name*
+  #{product-name})
+
+(defparameter *version-string*
+  "1.0")
+
+(defparameter *codesign-identity*
+  "Developer ID Application")
+
+(defparameter *product*
+  (target-executable-path *product-name*))

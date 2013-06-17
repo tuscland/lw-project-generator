@@ -1,0 +1,19 @@
+(in-package #{package-name})
+
+(defun debugger-hook (condition old-debugger-hook)
+  (declare (ignore old-debugger-hook))
+  (let ((path (dbg:log-bug-form (format nil "Unexpected error occured: ~a" condition)
+                                :message-stream nil)))
+    (format *error-output*
+            "~&Unexpected error occured:~%~%~4T~A.~%~%~
+               Log file written to ~A.~%"
+            condition path)
+    (abort)))
+
+(defun init-error-handling ()
+  (setf *debugger-hook* #'debugger-hook
+        *error-output* (sys:make-stderr-stream)))
+
+(defun #{main-function-symbol} ()
+  (init-error-handling)
+  (format t "~&Hello World!~%"))

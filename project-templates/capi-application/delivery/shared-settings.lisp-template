@@ -1,0 +1,20 @@
+(in-package "CL-USER")
+
+(defparameter *product-name*
+  #{product-name})
+
+(defparameter *osx-bundle-identifier*
+  #{osx-bundle-identifier})
+
+(defparameter *version-string*
+  "1.0")
+
+(defparameter *codesign-identity*
+  "Developer ID Application")
+
+(defparameter *template-bundle-path*
+  "templates/AppTemplate.app")
+
+(defparameter *product*
+  (target-executable-path *product-name*
+                          (pathname-type *template-bundle-path*)))

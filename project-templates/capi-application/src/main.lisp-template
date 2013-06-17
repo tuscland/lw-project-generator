@@ -1,0 +1,26 @@
+(in-package #{package-name})
+
+(capi:define-interface #{main-interface-class-symbol} ()
+  ((application-interface
+    :initarg :application-interface
+    :initform nil))
+  (:default-initargs
+   :best-width 600
+   :best-height 400
+   :title #{product-name}))
+
+(defun #{main-function-symbol} ()
+  (init-error-handling)
+#| ; Initialization code for single window Mac OS X applications
+  (let ((application (make-instance 'application-interface)))
+    ;; Set the application interface before using any other CAPI
+    ;; functionality.
+    (capi:set-application-interface application)
+    ;; Start the application with its single window.
+    (let ((main-interface (make-instance '#{main-interface-class-symbol}
+                                         :application-interface application)))
+      (setf (application-interface-main-interface application) main-interface)
+      (capi:display main-interface)))
+  |#
+  (let ((main-interface (make-instance '#{main-interface-class-symbol})))
+    (capi:display main-interface)))

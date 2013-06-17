@@ -3,11 +3,11 @@
 (defsystem #{system-name}
   (:default-pathname "src")
   :members ("package"
-            "application-interface"
+            "application"
             "main")
   :rules ((:in-order-to :compile :all
            (:requires
             (:load "package")))
           (:in-order-to :compile "main"
            (:requires
-            (:load "application-interface")))))
+            (:load "application")))))

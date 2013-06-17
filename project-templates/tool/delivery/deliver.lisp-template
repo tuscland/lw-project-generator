@@ -1,0 +1,11 @@
+(in-package "CL-USER")
+
+(load (current-pathname "utilities"))
+(load (current-pathname "shared-settings") :print t)
+(load (current-pathname "../load"))
+
+(ensure-directories-exist *product*)
+
+(deliver '#{main-function-symbol}
+         *product*
+         0)

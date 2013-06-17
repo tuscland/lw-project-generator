@@ -1,0 +1,22 @@
+(in-package "CL-USER")
+
+(load (current-pathname "utilities"))
+(load (current-pathname "shared-settings") :print t)
+(load (current-pathname "../load"))
+
+(when (has-feature :MACOSX)
+  (when (save-argument-real-p)
+    (setf *product*
+          (hcl:create-macos-application-bundle
+           *product*
+           :template-bundle (current-pathname *template-bundle-path*)
+           :bundle-name *product-name*
+           :identifier *osx-bundle-identifier*
+           :version *version-string*
+           :version-string *version-string*))))
+
+(deliver '#{main-function-symbol}
+         *product*
+         0
+         :split :resources
+         :interface :capi)

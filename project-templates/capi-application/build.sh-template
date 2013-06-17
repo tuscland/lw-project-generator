@@ -1,0 +1,9 @@
+#!/bin/sh
+
+CURRENT_PATH="`dirname \"$0\"`"
+PROJECT_ROOT="${CURRENT_PATH}/.."
+
+LISPWORKS="#{lispworks-executable-path}"
+BUILD_SCRIPT="${CURRENT_PATH}/delivery/build.lisp"
+
+"${LISPWORKS}" -init "${BUILD_SCRIPT}"
