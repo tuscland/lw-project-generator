@@ -1,4 +1,4 @@
-(in-package #{package-name})
+(in-package #.package-name)
 
 (defun debugger-hook (condition old-debugger-hook)
   (declare (ignore old-debugger-hook))
@@ -14,6 +14,6 @@
   (setf *debugger-hook* #'debugger-hook
         *error-output* (sys:make-stderr-stream)))
 
-(defun #{main-function-symbol} ()
+(defun #.main-function-symbol ()
   (init-error-handling)
   (format t "~&Hello World!~%"))

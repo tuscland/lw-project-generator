@@ -2,4 +2,4 @@
 
 (load-all-patches)
 (load (current-pathname "defsystem"))
-(compile-system #{system-name} :load t)
+(compile-system #.system-name :load t)

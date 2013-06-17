@@ -6,6 +6,6 @@
 
 (ensure-directories-exist *product*)
 
-(deliver '#{main-function-symbol}
+(deliver '#.main-function-symbol
          *product*
          0)
