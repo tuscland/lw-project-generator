@@ -11,28 +11,30 @@ Currently it provides two templates:
 
  -  `capi-application`
 
-    For creating a CAPI based application with split lisp image and optional codesigning for Mac OS X.
+    For creating a CAPI based application with split lisp image and optional codesigning on Mac OS X.
 
  -  `tool`
 
     For creating a command-line based application.
 
-Both projects templates also feature:
+Both project templates also have:
 
- -  Optional Git repository initialization with default `.gitignore` file,
+ -  An optional Git repository initialization with default `.gitignore` file,
  -  A `defsystem` definition,
  -  A `defpackage` definition,
  -  A load script,
- -  A build / deliver shell script that puts built products in different directories depending on the built architecture,
+ -  A build / deliver shell script that puts built product in a directory that depends on the built architecture,
  -  A basic top-level debugger hook,
- -  The generator will never overwrite existing files.
 
-It should be easy to create new project templates.
+Finally:
+
+ -  The project generator will never overwrite existing files.
+ -  It is easy to create new project templates.
 
 
 ## Examples
 
-This creates a CAPI application project in the working directory called `my-app` whose system is named `COM.WILDORA.MY-APP`.  A Git repository will be initialized and the produced application will be named "My App".
+This creates a CAPI application project called `my-app` in the current working directory whose system is named `COM.WILDORA.MY-APP`.  A Git repository will be initialized and the produced application will be named "My App".
 
     CL-USER 1 > (project-generator:run "COM.WILDORA.MY-APP" "My App")
     ; Initialized empty Git repository in /Users/camille/lisp/my-app/.git/
