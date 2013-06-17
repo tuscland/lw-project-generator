@@ -1,6 +1,7 @@
 (in-package "CL-USER")
 
 (defpackage #.package-name
+  #+package-nickname
   (:nicknames #.package-nickname)
   (:export
    #.(string main-function-symbol)))
