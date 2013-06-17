@@ -1,6 +1,6 @@
 (in-package "CL-USER")
 
-(defsystem #{system-name}
+(defsystem #.system-name
   (:default-pathname "src")
   :members ("package"
             "application"

@@ -79,7 +79,8 @@ we do not overwrite an existing file by error."
              (if tag
                  (string-append
                   string
-                  (eval-template-expression tag)
+                  (with-input-from-string (stream tag)
+                    (template-read-eval stream))
                   (do-substitutions rest))
                string))
            string))

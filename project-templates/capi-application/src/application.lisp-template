@@ -1,11 +1,11 @@
-(in-package #{package-name})
+(in-package #.package-name)
 
 (capi:define-interface application-interface (capi:cocoa-default-application-interface)
   ((main-interface
     :initform nil
     :accessor application-interface-main-interface))
   (:default-initargs
-   :title #{product-name}
+   :title #.product-name
    :destroy-callback 'application-interface-destroy))
 
 (defun application-interface-destroy (application)

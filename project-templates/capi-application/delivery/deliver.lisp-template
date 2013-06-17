@@ -15,7 +15,7 @@
            :version *version-string*
            :version-string *version-string*))))
 
-(deliver '#{main-function-symbol}
+(deliver '#.main-function-symbol
          *product*
          0
          :split :resources

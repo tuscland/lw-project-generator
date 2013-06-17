@@ -54,19 +54,24 @@
     ',(find-symbol (string name)
                    *template-variables-package*)))
 
-(defun eval-template-expression (string)
-  "Results the result of evaluating STRING in the template variables package."
-  (let* ((*package* *template-variables-package*)
-         (form (read-from-string string)))
-    (eval form)))
+(defun template-read-eval (stream)
+  (eval
+   (let ((*package* *template-variables-package*))
+     (read stream))))
 
-(defun |#{-reader| (stream subchar arg)
+(defun |#.-reader| (stream subchar arg)
   (declare (ignore subchar arg))
-  (eval-template-expression
-   (read-string-up-to #\} stream)))
+  (template-read-eval stream))
+
+(defun |#+-reader| (stream subchar arg)
+  (declare (ignore subchar arg))
+  (unless (template-read-eval stream)
+    (read stream))
+  (values))
 
 (defun install-template-reader-macros ()
-  (set-dispatch-macro-character #\# #\{ #'|#{-reader|))
+  (set-dispatch-macro-character #\# #\. #'|#.-reader|)
+  (set-dispatch-macro-character #\# #\+ #'|#+-reader|))
 
 (defmacro with-template-reader-macros (&body body)
   `(let ((*readtable* (copy-readtable nil)))

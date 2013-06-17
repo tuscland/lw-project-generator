@@ -1,10 +1,10 @@
 (in-package "CL-USER")
 
 (defparameter *product-name*
-  #{product-name})
+  #.product-name)
 
 (defparameter *osx-bundle-identifier*
-  #{osx-bundle-identifier})
+  #.osx-bundle-identifier)
 
 (defparameter *version-string*
   "1.0")
