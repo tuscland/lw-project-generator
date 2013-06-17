@@ -74,6 +74,7 @@
 (defun setup-template-variables (system-name product-name)
   (assert (and product-name
                system-name))
+  (setf system-name (string-upcase system-name))
   (set-project-package system-name)
   (set-main-symbols system-name)
   (setf (template-variable product-name) product-name
