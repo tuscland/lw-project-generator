@@ -51,7 +51,8 @@
 
 (defun set-project-package (system-name)
   (setf (template-variable package-name) system-name
-        (template-variable package-nickname) (last-dotted-component system-name)
+        (template-variable package-nickname) (when (find #\. system-name)
+                                               (last-dotted-component system-name))
         *project-package* (or (find-package (template-variable package-name))
                               (make-package (template-variable package-name)))))
 
