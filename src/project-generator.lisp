@@ -24,7 +24,16 @@
 (defvar *dry-run-p* nil
   "When true, a log of operations is output and no file is written to
 disk.")
-(defvar *git* "/usr/bin/git")
+
+(defparameter *git* "/usr/bin/git")
+(defparameter *git-ignored-patterns*
+  '(".DS_Store"
+    "*~"
+    "*.xfasl"
+    "*.64xfasl"
+    "*.ofasl"
+    "*.64ofasl"
+    "*.ufasl"))
 
 (defparameter *default-project-template* "capi-application")
 (defparameter *project-templates-directory*
@@ -169,12 +178,18 @@ in RELATIVE-PATHNAME."
               (pathname-as-relative source pathname))
             pathnames)))
 
+
+
 ;; TODO: See how we can automate git repository creation on Windows.
 (defun initialize-git-in-directory (directory)
-  #-WINDOWS
   (sys:call-system-showing-output
    (list *git* "init" (namestring directory))
-   :show-cmd nil))
+   :show-cmd nil)
+  (with-safe-output (stream (merge-pathnames ".gitignore" directory))
+    (mapc (lambda (line)
+            (write-line line stream))
+          *git-ignored-patterns*))
+  (values))
 
 (defun process-project-template (source destination &optional (pathname #P""))
   "Recursively process files in PATHNAME relatively to SOURCE, and put
@@ -188,6 +203,7 @@ the processed files in PATHNAME, this time relatively to DESTINATION."
 (defun run (system-name product-name
             &key (project-template-name *default-project-template*)
                  (destination (get-working-directory))
+                 #-WINDOWS
                  (git-init-p t))
   (let ((template-directory (truename
                              (sys:directory-pathname
@@ -199,6 +215,7 @@ the processed files in PATHNAME, this time relatively to DESTINATION."
                                              destination))))
     (with-template-variables (system-name product-name)
       (process-project-template template-directory project-directory))
+    #-WINDOWS
     (when git-init-p
       (initialize-git-in-directory project-directory))
     project-directory))
