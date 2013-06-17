@@ -1,0 +1,13 @@
+----------------
+LW-PROJECT-GENERATOR
+----------------
+
+- add support for comments in processed templates.
+- add a way to create releases based on Git support.
+- version number can also depend on a formalized git tagging.
+
+
+Templates enhancements:
+capi-application:
+
+ - add support for external resources. (?)
