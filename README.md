@@ -1,5 +1,5 @@
 # LispWorks Project Generator
-### Version 1.0.0
+### Version 1.0.1 (June 17th, 2013)
 
 ## Overview
 
