@@ -1,6 +1,27 @@
-(in-package "APP-GENERATOR")
+;;;; -*- encoding: utf-8; mode: LISP; syntax: COMMON-LISP; indent-tabs-mode: nil -*-
 
-(defun pathname-as-relative (parent subpath &optional (defaults *default-pathname-defaults*))
+;;; LispWorks Project Generator.
+;;; Copyright (c) 2013, Camille Troillard. All rights reserved.
+
+;;; Licensed under the Apache License, Version 2.0 (the "License");
+;;; you may not use this file except in compliance with the License.
+;;; You may obtain a copy of the License at
+;;;
+;;;     http://www.apache.org/licenses/LICENSE-2.0
+;;;
+;;; Unless required by applicable law or agreed to in writing,
+;;; software distributed under the License is distributed on an "AS
+;;; IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+;;; express or implied.  See the License for the specific language
+;;; governing permissions and limitations under the License.
+
+;;; Utility functions.
+
+
+(in-package "COM.WILDORA.PROJECT-GENERATOR")
+
+(defun pathname-as-relative (parent subpath
+                             &optional (defaults *default-pathname-defaults*))
   "Given PARENT and a SUBPATH contained in it, return a relative path
 leading from PARENT to SUBPATH.  In other words, (merge-pathnames
 (pathname-as-relative parent subpath) parent) == subpath.
@@ -30,7 +51,7 @@ allow anchoring it."
       (when (incompatible-pathnames parent subpath #'pathname-device)
         (error "Pathnames '~A' and '~A' are located on different ~
                 devices and cannot be expressed relative to each other"
-               parent subpath)))    
+               parent subpath)))
     (loop :for (pdir . prest) :on (cdr (pathname-directory parent))
           :for (subdir . subrest) :on (cdr (pathname-directory subpath))
           :for up := prest ;; cannot use :previous, since that won't run in the 1-past-last iteration
@@ -38,3 +59,20 @@ allow anchoring it."
           :while (equal pdir subdir)
           :finally (return (make-pathname :directory `(:relative ,@(mapcar (constantly :up) up) ,@down)
                                           :defaults subpath)))))
+
+(defun last-dotted-component (string)
+  (car (last (split-sequence '(#\.) string))))
+
+(defun string-suffix-p (string suffix)
+  (let ((start-index (- (length string)
+                        (length suffix))))
+    (when (>= start-index 0)
+      (string= string suffix :start1 start-index))))
+
+(defun read-string-up-to (endchar &optional (stream *standard-input*))
+  (loop :with result := nil
+        :for char := (read-char stream)
+        :while (not (eql char endchar))
+        :do (push char result)
+        :finally (return (coerce (nreverse result)
+                                 'string))))
