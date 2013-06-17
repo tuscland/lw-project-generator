@@ -1,2 +1,7 @@
 .DS_Store
+*~
+*.xfasl
 *.64xfasl
+*.ofasl
+*.64ofasl
+*.ufasl
