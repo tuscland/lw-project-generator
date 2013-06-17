@@ -1,5 +1,5 @@
 (in-package "CL-USER")
 
 (load-all-patches)
-(load (current-pathname "system"))
+(load (current-pathname "defsystem"))
 (compile-system #{system-name} :load t)
