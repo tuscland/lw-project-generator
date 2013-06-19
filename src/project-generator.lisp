@@ -20,10 +20,10 @@
 
 (in-package "COM.WILDORA.PROJECT-GENERATOR")
 
-(defvar *debug-log-p* nil)
+(defvar *debug-log-p* nil
+  "When true, some additional information is logged to *DEBUG-IO*.")
 (defvar *dry-run-p* nil
-  "When true, a log of operations is output and no file is written to
-disk.")
+  "When true, no actual processing occurs (e.g. no file is written to disk).")
 
 (defparameter *git* "/usr/bin/git")
 (defparameter *dot-git-ignore*

@@ -23,4 +23,5 @@
   (:export
    "FIND-PROJECT-TEMPLATES"
    "RUN"
-   "*DRY-RUN-P*"))
+   "*DRY-RUN-P*"
+   "*DEBUG-LOG-P*"))
