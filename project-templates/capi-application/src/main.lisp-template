@@ -10,8 +10,12 @@
    :title #.product-name))
 
 (defun #.main-function-symbol ()
-  (init-error-handling)
-#| ; Initialization code for single window Mac OS X applications
+  (when (delivered-image-p)
+    (init-error-handling))
+#|
+  ; Initialization code for single window Mac OS X applications
+  ; Disabled at the moment until we find a way to present comments
+  ; properly in processed template.
   (let ((application (make-instance 'application-interface)))
     ;; Set the application interface before using any other CAPI
     ;; functionality.
@@ -21,6 +25,7 @@
                                          :application-interface application)))
       (setf (application-interface-main-interface application) main-interface)
       (capi:display main-interface)))
-  |#
+|#
   (let ((main-interface (make-instance '#.main-interface-class-symbol)))
     (capi:display main-interface)))
+	
