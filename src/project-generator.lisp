@@ -26,14 +26,16 @@
 disk.")
 
 (defparameter *git* "/usr/bin/git")
-(defparameter *git-ignored-patterns*
-  '(".DS_Store"
-    "*~"
-    "*.xfasl"
-    "*.64xfasl"
-    "*.ofasl"
-    "*.64ofasl"
-    "*.ufasl"))
+(defparameter *dot-git-ignore*
+  ".DS_Store
+*~
+*.xfasl
+*.64xfasl
+*.ofasl
+*.64ofasl
+*.ufasl
+build
+")
 
 (defparameter *default-project-template* "capi-application")
 (defparameter *project-templates-directory*
@@ -187,9 +189,7 @@ in RELATIVE-PATHNAME."
    (list *git* "init" (namestring directory))
    :show-cmd nil)
   (with-safe-output (stream (merge-pathnames ".gitignore" directory))
-    (mapc (lambda (line)
-            (write-line line stream))
-          *git-ignored-patterns*))
+    (write-string *dot-git-ignore* stream))
   (values))
 
 (defun process-project-template (source destination &optional (pathname #P""))
