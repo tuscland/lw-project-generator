@@ -99,6 +99,10 @@ we do not overwrite an existing file by error."
              (*print-pretty* t))
          ,@body))))
 
+(defun find-package-in-form (form)
+  (and (eq (first form) 'in-package)
+       (find-package (second form))))
+
 (defun read-lisp-template (pathname)
   (with-open-file (stream pathname
                           :direction :input)
@@ -109,17 +113,16 @@ we do not overwrite an existing file by error."
                   (setf *package* package))
             :collect form))))
 
-(defun find-package-in-form (form)
-  (and (eq (first form) 'in-package)
-       (find-package (second form))))
+(defun write-lisp-template (to forms)
+  (with-safe-output (stream to)
+    (with-template-io-syntax
+      (mapcar (lambda (form)
+                (when-let (package (find-package-in-form form))
+                  (setf *package* package))
+                (pprint form stream)
+                (terpri stream))
+              forms))))
 
-(defun print-forms (forms &optional (stream *standard-output*))
-  (mapcar (lambda (form)
-            (when-let (package (find-package-in-form form))
-              (setf *package* package))
-            (pprint form stream)
-            (terpri stream))
-          forms))
 
 (defun template-file-target-type (pathname)
   (let* ((type (pathname-type pathname))
@@ -148,9 +151,7 @@ we do not overwrite an existing file by error."
   (debug-log "; process lisp template ~A to ~A~%" from to)
   (let ((forms (read-lisp-template from)))
     (unless *dry-run-p*
-      (with-safe-output (stream to)
-        (with-template-io-syntax
-          (print-forms forms stream))))))
+      (write-lisp-template to forms))))
 
 (defun process-generic-template (from to)
   (debug-log "; process text template ~A to ~A~%" from to)
