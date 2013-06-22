@@ -9,5 +9,4 @@
 (defparameter *codesign-identity*
   "Developer ID Application")
 
-(defparameter *product*
-  (target-executable-path *product-name*))
+(defparameter *product* (target-executable-path *product-name*))

@@ -15,6 +15,9 @@
 (defparameter *template-bundle-path*
   "templates/AppTemplate.app")
 
-(defparameter *product*
-  (target-executable-path *product-name*
-                          (pathname-type *template-bundle-path*)))
+(defparameter *product* (target-executable-path *product-name*
+                         (case (platform)
+                           (:macosx
+                            (pathname-type *template-bundle-path*))
+                           (:mswindows
+                            "exe"))))

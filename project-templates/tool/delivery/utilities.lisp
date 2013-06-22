@@ -1,3 +1,5 @@
+;;;; -*- encoding: utf-8; mode: LISP; syntax: COMMON-LISP -*-
+
 (in-package "CL-USER")
 
 (defun has-feature (feature)
@@ -12,7 +14,20 @@
 (defun app-build-architecture ()
   (format nil "~A-~A" (software-type) (architecture)))
 
+(defun target-directory ()
+  (make-pathname :directory (append
+                             (butlast (pathname-directory
+                                       (current-pathname)))
+                             (list "build"
+                                   (app-build-architecture)))))
+
 (defun target-executable-path (product-name &optional product-bundle-extension)
-  (current-pathname (make-pathname :name product-name
-                                   :directory (list :relative :up "build" (app-build-architecture)))
-                    product-bundle-extension))
+  (make-pathname :name product-name
+                 :type product-bundle-extension
+                 :defaults (target-directory)))
+
+(defun platform ()
+  #+macosx :macosx
+  #+mswindows :mswindows
+  #+linux :linux
+  #-(or macosx windows linux) :unknown)

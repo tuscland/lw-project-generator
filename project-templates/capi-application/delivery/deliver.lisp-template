@@ -4,7 +4,9 @@
 (load (current-pathname "shared-settings") :print t)
 (load (current-pathname "../load"))
 
-(when (has-feature :MACOSX)
+(ensure-directories-exist *product*)
+
+(when (has-feature :macosx)
   (when (save-argument-real-p)
     (setf *product*
           (hcl:create-macos-application-bundle

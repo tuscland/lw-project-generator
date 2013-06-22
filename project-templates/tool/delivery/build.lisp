@@ -1,38 +1,56 @@
+;;;; -*- encoding: utf-8; mode: LISP; syntax: COMMON-LISP -*-
+
 (in-package "CL-USER")
 
 (load (current-pathname "utilities"))
 (load (current-pathname "shared-settings") :print t)
 
 (defparameter *delivery-script*
-  (current-pathname "deliver"))
+  (namestring
+   (current-pathname "deliver")))
 
-(defparameter *rm*
-  ;; TODO: adapt this script to Windows and Linux.
-  "/bin/rm")
+(defparameter *target-directory*
+  (namestring
+   (target-directory)))
 
-(defun normalize-command-argument (object)
-  (cond
-   ((pathnamep object)
-    (namestring object))
-   (t object)))
-
-(defun call-system (&rest command)
-  (sys:call-system-showing-output
-   (mapcar #'normalize-command-argument command)))
+(defun call-system (&rest args)
+  (let ((result (apply #'sys:call-system-showing-output args)))
+    (unless (zerop result)
+      (quit :status result :ignore-errors-p t))))
 
 (defun run-deliver ()
   (format t "~&; *** Delivery~%")
-  (call-system (lisp-image-name) "-build" *delivery-script*))
+  (call-system
+   (list (lisp-image-name) "-build" *delivery-script*)))
 
 (defun run-clean ()
   (format t "~&; *** Cleaning~%")
-  (call-system *rm* "-rf" *product*))
+  (ecase (platform)
+    (:macosx
+     (call-system
+      (list "/bin/rm" "-rf" *target-directory*)))
+    (:mswindows
+     (call-system
+      (string-append "RMDIR " *target-directory* "/S" "/Q")))))
 
 (defun run-codesign ()
-  (format t "~&; *** Codesigning~%")
-  (call-system "/usr/bin/codesign" "-s" *codesign-identity* *product*))
+  (ecase (platform)
+    (:macosx
+     (format t "~&; *** Codesigning~%")
+     (call-system
+      (list "/usr/bin/codesign" "-s"
+            *codesign-identity*
+            (namestring *product*))))
+    (otherwise
+     (do-nothing))))
 
 (run-clean)
 (run-deliver)
-;(run-codesign)
+
+; NOTE: only executables delivered with split image can be codesigned.
+; As it is not convenient to deliver a tool with a split image,
+; codesigning is disabled.
+;
+; (run-codesign)
+
 (quit)
