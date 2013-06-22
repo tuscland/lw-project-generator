@@ -37,6 +37,9 @@
 build
 ")
 
+(defparameter *lisp-template-preamble*
+  ";;;; -*- encoding: utf-8; mode: LISP; syntax: COMMON-LISP -*-")
+
 (defparameter *default-project-template* "capi-application")
 (defparameter *project-templates-directory*
   (merge-pathnames #P"../project-templates/"
@@ -116,6 +119,8 @@ we do not overwrite an existing file by error."
 (defun write-lisp-template (to forms)
   (with-safe-output (stream to)
     (with-template-io-syntax
+      (write-string *lisp-template-preamble* stream)
+      (terpri stream)
       (mapcar (lambda (form)
                 (when-let (package (find-package-in-form form))
                   (setf *package* package))
