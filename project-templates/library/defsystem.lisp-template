@@ -1,0 +1,9 @@
+(in-package "CL-USER")
+
+(defsystem #.system-name
+  (:default-pathname "src")
+  :members ("package"
+            "library")
+  :rules ((:in-order-to :compile :all
+           (:requires
+            (:load :previous)))))

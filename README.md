@@ -1,5 +1,4 @@
 # LispWorks Project Generator
-### Version 1.0.1 (June 17th, 2013)
 
 ## Overview
 
@@ -16,6 +15,11 @@ Currently it provides two templates:
  -  `tool`
 
     For creating a command-line based application.
+
+ -  `library`
+
+    Very basic template for a library.
+
 
 Both project templates also have:
 
@@ -36,7 +40,7 @@ Finally:
 
 This creates a CAPI application project called `my-app` in the current working directory whose system is named `COM.WILDORA.MY-APP`.  A Git repository will be initialized and the produced application will be named "My App".
 
-    CL-USER 1 > (project-generator:run "COM.WILDORA.MY-APP" "My App")
+    CL-USER 1 > (project-generator:run "COM.WILDORA.MY-APP" :product-name "My App")
     ; Initialized empty Git repository in /Users/camille/lisp/my-app/.git/
     #P"/Users/camille/lisp/my-app/"
 
@@ -55,7 +59,8 @@ The new project is ready to build:
 
 We can also create a command-line application using the `tool` project template.
 
-    CL-USER 2 > (project-generator:run "COM.WILDORA.FROBULATOR" "frobulator"
+    CL-USER 2 > (project-generator:run "COM.WILDORA.FROBULATOR"
+                                       :product-name  "frobulator"
                                        :project-template-name "tool"
                                        :destination "/net/projects/"
                                        :git-init-p nil)
@@ -68,6 +73,8 @@ This is early release software, it has only been tested on Mac OS X.
 Please apologize if it does not work on your operating system yet.
 
 The lisp template generator does not output comments yet.
+
+Files produced from templates cannot be named dynamically (e.g. from a variable).
 
 
 ## Feedback and suggestions
