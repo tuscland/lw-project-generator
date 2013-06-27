@@ -211,12 +211,16 @@ the processed files in PATHNAME, this time relatively to DESTINATION."
         (process-project-template source destination pathname)
       (process-a-file source destination pathname))))
 
-(defun run (system-name product-name
-            &key (project-template-name *default-project-template*)
+(defun run (system-name
+            &key product-name
+                 (project-template-name *default-project-template*)
                  (destination (get-working-directory))
                  #-WINDOWS
                  (git-init-p t))
-  (let ((template-directory (truename
+  (assert system-name)
+  (let ((product-name (or product-name
+                          (last-dotted-component system-name)))
+        (template-directory (truename
                              (sys:directory-pathname
                               (merge-pathnames project-template-name
                                                *project-templates-directory*))))
