@@ -27,18 +27,22 @@
 
 (defparameter *git* "/usr/bin/git")
 (defparameter *dot-git-ignore*
-  ".DS_Store
+  "
 *~
 *.xfasl
 *.64xfasl
 *.ofasl
 *.64ofasl
 *.ufasl
-build
+*.64ufasl
+build/*/
+
+.DS_Store
+xcuserdata
 ")
 
 (defparameter *lisp-template-preamble*
-  ";;;; -*- encoding: utf-8; mode: LISP; syntax: COMMON-LISP -*-")
+  ";;;; -*- encoding: utf-8 -*-")
 
 (defparameter *default-project-template* "capi-application")
 (defparameter *project-templates-directory*
