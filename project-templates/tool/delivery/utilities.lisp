@@ -30,4 +30,4 @@
   #+macosx :macosx
   #+mswindows :mswindows
   #+linux :linux
-  #-(or macosx windows linux) :unknown)
+  #-(or macosx mswindows linux) :unknown)

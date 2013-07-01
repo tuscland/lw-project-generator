@@ -16,7 +16,9 @@
 (defun call-system (&rest args)
   (let ((result (apply #'sys:call-system-showing-output args)))
     (unless (zerop result)
-      (quit :status result :ignore-errors-p t))))
+      (error "~&Calling ~A resulted in status code ~A~%"
+             args
+             result))))
 
 (defun run-deliver ()
   (format t "~&; *** Delivery~%")
@@ -30,19 +32,18 @@
      (call-system
       (list "/bin/rm" "-rf" *target-directory*)))
     (:mswindows
-     (call-system
-      (string-append "RMDIR " *target-directory* "/S" "/Q")))))
+      (when (probe-file *target-directory*)
+        (call-system
+         (string-append "RMDIR /S /Q \"" *target-directory* "\""))))))
 
 (defun run-codesign ()
-  (ecase (platform)
+  (case (platform)
     (:macosx
      (format t "~&; *** Codesigning~%")
      (call-system
       (list "/usr/bin/codesign" "-s"
             *codesign-identity*
-            (namestring *product*))))
-    (otherwise
-     (do-nothing))))
+            (namestring *product*))))))
 
 (run-clean)
 (run-deliver)

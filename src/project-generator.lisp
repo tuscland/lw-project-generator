@@ -215,7 +215,7 @@ the processed files in PATHNAME, this time relatively to DESTINATION."
             &key product-name
                  (project-template-name *default-project-template*)
                  (destination (get-working-directory))
-                 #-WINDOWS
+                 #-mswindows
                  (git-init-p t))
   (assert system-name)
   (let ((product-name (or product-name
@@ -230,7 +230,7 @@ the processed files in PATHNAME, this time relatively to DESTINATION."
                                              destination))))
     (with-template-variables (system-name product-name)
       (process-project-template template-directory project-directory))
-    #-WINDOWS
+    #-mswindows
     (when git-init-p
       (initialize-git-in-directory project-directory))
     project-directory))

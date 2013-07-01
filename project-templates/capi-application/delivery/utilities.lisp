@@ -30,4 +30,10 @@
   #+macosx :macosx
   #+mswindows :mswindows
   #+linux :linux
-  #-(or macosx windows linux) :unknown)
+  #-(or macosx mswindows linux) :unknown)
+
+(defun build-date ()
+  (multiple-value-bind (seconds minutes hours day month year &rest)
+      (decode-universal-time (get-universal-time))
+    (format nil "~A-~2,'0D-~2,'0D"
+            year month day)))
