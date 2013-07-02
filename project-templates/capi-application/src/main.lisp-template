@@ -9,9 +9,13 @@
    :best-height 400
    :title #.product-name))
 
+(defmethod capi:top-level-interface-save-geometry-p ((self #.main-interface-class-symbol))
+  t)
+
+(defmethod capi:top-level-interface-geometry-key ((self #.main-interface-class-symbol))
+  (values 'main-interface *application-registry-name*))
+
 (defun #.main-function-symbol ()
-  (when (delivered-image-p)
-    (init-error-handling))
 #|
   ; Initialization code for single window Mac OS X applications
   ; Disabled at the moment until we find a way to present comments
@@ -28,4 +32,3 @@
 |#
   (let ((main-interface (make-instance '#.main-interface-class-symbol)))
     (capi:display main-interface)))
-	

@@ -30,7 +30,10 @@
 
 ;; For the moment, make at least this function available in the
 ;; variables package.
-(import '(string) *template-variables-package*)
+(import '(string
+          string-append
+          keyword-symbol)
+        *template-variables-package*)
 
 
 (defparameter *template-variables* ())

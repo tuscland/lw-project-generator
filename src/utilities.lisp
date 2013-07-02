@@ -76,3 +76,7 @@ allow anchoring it."
         :do (push char result)
         :finally (return (coerce (nreverse result)
                                  'string))))
+
+(defun keyword-symbol (string)
+  (intern (string-upcase string)
+          (find-package "KEYWORD")))

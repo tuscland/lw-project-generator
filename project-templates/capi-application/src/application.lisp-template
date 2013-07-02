@@ -1,5 +1,8 @@
 (in-package #.package-name)
 
+(defglobal-parameter *application-registry-name* #.(keyword-symbol product-name))
+(defglobal-parameter *application-product-version* "1.0")
+
 (capi:define-interface application-interface (capi:cocoa-default-application-interface)
   ((main-interface
     :initform nil
@@ -20,13 +23,20 @@
 
 (defun debugger-hook (condition old-debugger-hook)
   (declare (ignore old-debugger-hook))
-  (let ((path (dbg:log-bug-form (format nil "Unexpected error occured: ~a" condition)
-                                :message-stream nil)))
-    (capi:display-message
-            "~&Unexpected error occured:~%~%~4T~A.~%~%~
-               Log file written to ~A.~%"
-            condition path)
+  (let ((path
+         (dbg:log-bug-form (format nil "Unexpected error occured: ~A" condition)
+                           :message-stream nil)))
+    (capi:display-message "~&Unexpected error occured:~%~4T~A.~%~%~
+                             Log file written to ~A~%"
+                          condition
+                          path)
     (abort)))
 
-(defun init-error-handling ()
-  (setf *debugger-hook* #'debugger-hook))
+(define-action "When Starting Image" "Initialize Delivered Image"
+               'init-delivered-image)
+
+(defun init-delivered-image ()
+  (when (delivered-image-p)
+    (setf *debugger-hook* #'debugger-hook)
+    (setf (sys:product-registry-path *application-registry-name*)
+          (list #.(string-append "." product-name) *application-product-version*))))
