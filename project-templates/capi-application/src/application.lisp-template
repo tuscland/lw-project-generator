@@ -33,10 +33,12 @@
     (abort)))
 
 (define-action "When Starting Image" "Initialize Delivered Image"
-               'init-delivered-image)
+               'init-application)
 
-(defun init-delivered-image ()
+(defun init-application ()
+  (setf (sys:product-registry-path *application-registry-name*)
+        (list #.(string-append "." product-name) *application-product-version*))
   (when (delivered-image-p)
-    (setf *debugger-hook* #'debugger-hook)
-    (setf (sys:product-registry-path *application-registry-name*)
-          (list #.(string-append "." product-name) *application-product-version*))))
+    (setf *debugger-hook* #'debugger-hook)))
+
+(init-application)
